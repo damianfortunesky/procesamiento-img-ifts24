@@ -1,34 +1,35 @@
 # Procesamiento de Imágenes Digitales - Trabajos Prácticos
 
-Repositorio base para desarrollar los trabajos prácticos (TPs) de la materia **Procesamiento de Imágenes Digitales** usando **Python 3** y **py5**.
+Repositorio base para desarrollar trabajos prácticos de **Procesamiento de Imágenes Digitales** usando **Python 3.12** y **py5**.
 
-## Objetivo del repositorio
+## Objetivo
 
-- Centralizar el desarrollo de múltiples TPs en una estructura única.
+- Centralizar los TPs en una estructura única.
 - Mantener una organización simple y escalable.
-- Facilitar el trabajo local desde Visual Studio Code.
+- Facilitar ejecución local en Visual Studio Code.
 
 ## Requisitos
 
-- Python 3.10 o superior
-- pip (gestor de paquetes de Python)
-- Java Runtime (requisito habitual de py5)
+- Python 3.12
+- pip
+- Java Runtime (requisito de py5)
 
 ## Instalación del entorno
 
-1. (Opcional) Crear y activar un entorno virtual:
+### PowerShell (Windows)
 
-```powershell: crear y lanzar entornno
-
+```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-py -m venv .venv
-.venv\Scripts\Activate.ps1
-
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
-2. Instalar dependencias:
+### Bash (Linux/macOS)
 
 ```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -48,55 +49,15 @@ pip install -r requirements.txt
             └── main.py
 ```
 
-## Uso inicial
-
-Ejecutar el TP de ejemplo:
+## Uso
 
 ```bash
 python tps/tp01/src/main.py
 ```
 
-Este TP inicial no implementa lógica de procesamiento todavía; solo deja el punto de entrada listo para comenzar.
+## Entorno virtual (resumen)
 
-## Convención para nuevos TPs
-
-Para agregar un nuevo trabajo práctico, replicar la estructura de `tp01`:
-
-- `assets/input/`: imágenes de entrada
-- `assets/output/`: resultados generados
-- `src/main.py`: punto de entrada del TP
-- `README.md`: notas y consignas del TP
-
-
-# Entorno Virtual en Python (venv)
-
-## Objetivo
-
-El entorno virtual (`venv`) permite aislar las dependencias de un proyecto Python, evitando conflictos entre librerías y versiones utilizadas en distintos proyectos.
-
-Cada proyecto mantiene sus propias dependencias, sin afectar al sistema global.
-
----
-
-## ¿Por qué usar un entorno virtual?
-
-- Evita conflictos entre versiones de librerías
-- Permite reproducir el entorno fácilmente (`requirements.txt`)
-- Mantiene el sistema limpio (no instala paquetes globales)
-- Es estándar en proyectos profesionales
-
----
-
-# 1. Crear entorno (una sola vez)
-py -3.12 -m venv .venv
-
-# 2. Activar entorno
-.venv\Scripts\Activate.ps1
-
-# 3. Instalar dependencias
-pip install -r requirements.txt
-
-# 4. Trabajar en el proyecto
-
-# 5. Desactivar entorno
-deactivate
+1. Crear entorno (`venv`) una sola vez.
+2. Activarlo según tu shell.
+3. Instalar dependencias con `requirements.txt`.
+4. Desactivarlo con `deactivate` al terminar.

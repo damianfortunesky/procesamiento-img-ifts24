@@ -1,12 +1,19 @@
-# TP01 (base)
+# TP01 - Pizarra interactiva
 
-Este directorio es un punto de partida para el primer trabajo práctico.
+Este TP implementa una pizarra gráfica básica con `py5`.
+
+## Funcionalidades
+
+- Dibujo libre con mouse (click + drag)
+- Paleta visible con colores básicos
+- Selección de color activo al hacer click en la paleta
+- Limpieza del lienzo con la tecla `C`
 
 ## Estructura
 
-- `assets/input/`: imágenes de entrada del TP
-- `assets/output/`: imágenes o resultados de salida
-- `src/main.py`: script base ejecutable
+- `assets/input/`: recursos de entrada
+- `assets/output/`: resultados de salida
+- `src/main.py`: script principal ejecutable
 
 ## Ejecución
 
