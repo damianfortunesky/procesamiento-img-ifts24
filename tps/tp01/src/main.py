@@ -1,11 +1,18 @@
 """TP01 - Pizarra interactiva con paleta de colores usando py5."""
 
+from dataclasses import dataclass
+
 import py5
 
 WIDTH = 900
 HEIGHT = 600
 PALETTE_HEIGHT = 90
-BRUSH_SIZE = 8
+DEFAULT_BRUSH_SIZE = 8
+MIN_BRUSH_SIZE = 1
+MAX_BRUSH_SIZE = 50
+BACKGROUND_COLOR = (245, 245, 245)
+TOOL_PENCIL = "Pencil"
+TOOL_ERASER = "Eraser"
 
 PALETTE_COLORS = [
     (0, 0, 0),
@@ -15,14 +22,43 @@ PALETTE_COLORS = [
     (255, 170, 0),
 ]
 
-selected_color = PALETTE_COLORS[0]
+
+@dataclass
+class BoardState:
+    """Estado centralizado de la pizarra."""
+
+    selected_color: tuple[int, int, int] = PALETTE_COLORS[0]
+    active_tool: str = TOOL_PENCIL
+    brush_size: int = DEFAULT_BRUSH_SIZE
+
+
+state = BoardState()
 color_buttons = []
+
+
+def draw_hud() -> None:
+    """Dibuja información de herramienta, color y grosor activos."""
+    hud_x = 320
+    hud_y = 14
+    hud_width = 560
+    hud_height = 62
+
+    py5.no_stroke()
+    py5.fill(255, 255, 255, 220)
+    py5.rect(hud_x, hud_y, hud_width, hud_height, 10)
+
+    py5.fill(35)
+    py5.text_size(15)
+    py5.text(f"Herramienta: {state.active_tool}", hud_x + 12, hud_y + 24)
+    py5.text(f"Grosor: {state.brush_size}", hud_x + 12, hud_y + 46)
+    py5.text(f"Color: RGB{state.selected_color}", hud_x + 220, hud_y + 35)
 
 
 def reset_canvas() -> None:
     """Limpia el área de dibujo y vuelve a dibujar la paleta."""
-    py5.background(245)
+    py5.background(*BACKGROUND_COLOR)
     draw_palette()
+    draw_hud()
 
 
 def draw_palette() -> None:
@@ -37,7 +73,7 @@ def draw_palette() -> None:
         py5.stroke_weight(1)
         py5.rect(x, y, size, size, 6)
 
-        if color == selected_color:
+        if color == state.selected_color:
             py5.no_fill()
             py5.stroke(255)
             py5.stroke_weight(3)
@@ -63,27 +99,55 @@ def setup() -> None:
 def draw() -> None:
     """Renderiza dibujo libre cuando el mouse está presionado."""
     if py5.is_mouse_pressed and py5.mouse_y >= PALETTE_HEIGHT:
-        py5.stroke(*selected_color)
-        py5.stroke_weight(BRUSH_SIZE)
+        stroke_color = (
+            state.selected_color
+            if state.active_tool == TOOL_PENCIL
+            else BACKGROUND_COLOR
+        )
+        py5.stroke(*stroke_color)
+        py5.stroke_weight(state.brush_size)
         py5.line(py5.pmouse_x, py5.pmouse_y, py5.mouse_x, py5.mouse_y)
 
 
 def mouse_pressed() -> None:
     """Selecciona color activo cuando se hace click sobre la paleta."""
-    global selected_color
-
     if py5.mouse_y > PALETTE_HEIGHT:
         return
 
     for x, y, size, color in color_buttons:
         if x <= py5.mouse_x <= x + size and y <= py5.mouse_y <= y + size:
-            selected_color = color
+            state.selected_color = color
             draw_palette()
+            draw_hud()
             break
 
 
 def key_pressed() -> None:
-    """Limpia el lienzo con la tecla C."""
+    """Gestiona limpieza, cambio de herramientas y grosor de trazo."""
+    if py5.key and py5.key.lower() == "p":
+        state.active_tool = TOOL_PENCIL
+        draw_palette()
+        draw_hud()
+        return
+
+    if py5.key and py5.key.lower() == "e":
+        state.active_tool = TOOL_ERASER
+        draw_palette()
+        draw_hud()
+        return
+
+    if py5.key and py5.key == "+":
+        state.brush_size = min(MAX_BRUSH_SIZE, state.brush_size + 1)
+        draw_palette()
+        draw_hud()
+        return
+
+    if py5.key and py5.key == "-":
+        state.brush_size = max(MIN_BRUSH_SIZE, state.brush_size - 1)
+        draw_palette()
+        draw_hud()
+        return
+
     if py5.key and py5.key.lower() == "c":
         reset_canvas()
 
