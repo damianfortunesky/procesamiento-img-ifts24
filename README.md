@@ -23,6 +23,10 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+
+python tps/tp01/src/main.py
+desactivate
+cls
 ```
 
 ### Bash (Linux/macOS)
