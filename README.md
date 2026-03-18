@@ -18,10 +18,12 @@ Repositorio base para desarrollar los trabajos prácticos (TPs) de la materia **
 
 1. (Opcional) Crear y activar un entorno virtual:
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-# .venv\\Scripts\\activate   # Windows (PowerShell)
+```powershell: crear y lanzar entornno
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+
 ```
 
 2. Instalar dependencias:
@@ -64,3 +66,37 @@ Para agregar un nuevo trabajo práctico, replicar la estructura de `tp01`:
 - `assets/output/`: resultados generados
 - `src/main.py`: punto de entrada del TP
 - `README.md`: notas y consignas del TP
+
+
+# Entorno Virtual en Python (venv)
+
+## Objetivo
+
+El entorno virtual (`venv`) permite aislar las dependencias de un proyecto Python, evitando conflictos entre librerías y versiones utilizadas en distintos proyectos.
+
+Cada proyecto mantiene sus propias dependencias, sin afectar al sistema global.
+
+---
+
+## ¿Por qué usar un entorno virtual?
+
+- Evita conflictos entre versiones de librerías
+- Permite reproducir el entorno fácilmente (`requirements.txt`)
+- Mantiene el sistema limpio (no instala paquetes globales)
+- Es estándar en proyectos profesionales
+
+---
+
+# 1. Crear entorno (una sola vez)
+py -3.12 -m venv .venv
+
+# 2. Activar entorno
+.venv\Scripts\Activate.ps1
+
+# 3. Instalar dependencias
+pip install -r requirements.txt
+
+# 4. Trabajar en el proyecto
+
+# 5. Desactivar entorno
+deactivate
