@@ -34,6 +34,7 @@ class BoardState:
 
 state = BoardState()
 color_buttons = []
+tool_buttons = []
 
 
 def draw_hud() -> None:
@@ -58,6 +59,24 @@ def draw_hud() -> None:
     py5.stroke(50)
     py5.stroke_weight(1)
     py5.circle(hud_x + 320, hud_y + 34, 18)
+
+
+def draw_tool_buttons() -> None:
+    """Dibuja botones de herramienta y resalta la herramienta activa."""
+    for x, y, width, height, tool_name, label in tool_buttons:
+        is_active = state.active_tool == tool_name
+
+        py5.stroke(255 if is_active else 65)
+        py5.stroke_weight(2 if is_active else 1)
+        py5.fill(95, 95, 115) if is_active else py5.fill(225, 225, 238)
+        py5.rect(x, y, width, height, 9)
+
+        py5.fill(245 if is_active else 45)
+        py5.text_size(13)
+        py5.text_align(py5.CENTER, py5.CENTER)
+        py5.text(label, x + width / 2, y + height / 2)
+
+    py5.text_align(py5.LEFT, py5.BASELINE)
 
 
 def reset_canvas() -> None:
@@ -90,6 +109,8 @@ def draw_palette() -> None:
             py5.stroke_weight(3)
             py5.circle(cx, cy, radius * 2 + 8)
 
+    draw_tool_buttons()
+
 
 def setup() -> None:
     """Inicializa la ventana, la paleta y el lienzo."""
@@ -103,6 +124,13 @@ def setup() -> None:
     for index, color in enumerate(PALETTE_COLORS):
         cx = start_x + index * (button_radius * 2 + margin)
         color_buttons.append((cx, y, button_radius, color))
+
+    tool_buttons.extend(
+        [
+            (535, 18, 110, 34, TOOL_PENCIL, "Lápiz (P)"),
+            (655, 18, 110, 34, TOOL_ERASER, "Goma (E)"),
+        ]
+    )
 
     reset_canvas()
 
@@ -124,6 +152,13 @@ def mouse_pressed() -> None:
     """Selecciona color activo cuando se hace click sobre la paleta."""
     if py5.mouse_y > PALETTE_HEIGHT:
         return
+
+    for x, y, width, height, tool_name, _ in tool_buttons:
+        if x <= py5.mouse_x <= x + width and y <= py5.mouse_y <= y + height:
+            state.active_tool = tool_name
+            draw_palette()
+            draw_hud()
+            return
 
     for cx, cy, radius, color in color_buttons:
         if py5.dist(py5.mouse_x, py5.mouse_y, cx, cy) <= radius:
