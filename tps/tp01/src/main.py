@@ -51,7 +51,13 @@ def draw_hud() -> None:
     py5.text_size(15)
     py5.text(f"Herramienta: {state.active_tool}", hud_x + 12, hud_y + 24)
     py5.text(f"Grosor: {state.brush_size}", hud_x + 12, hud_y + 46)
-    py5.text(f"Color: RGB{state.selected_color}", hud_x + 220, hud_y + 35)
+
+    # Indicador de color actual como un círculo
+    py5.text(f"Color:", hud_x + 220, hud_y + 35)
+    py5.fill(*state.selected_color)
+    py5.stroke(50)
+    py5.stroke_weight(1)
+    py5.circle(hud_x + 320, hud_y + 34, 18)
 
 
 def reset_canvas() -> None:
@@ -64,34 +70,39 @@ def reset_canvas() -> None:
 def draw_palette() -> None:
     """Dibuja la franja de paleta y sus botones de color."""
     py5.no_stroke()
-    py5.fill(225)
+    py5.fill(220, 220, 240)
     py5.rect(0, 0, WIDTH, PALETTE_HEIGHT)
 
-    for x, y, size, color in color_buttons:
+    # Separador entre paleta y lienzo
+    py5.stroke(180)
+    py5.stroke_weight(2)
+    py5.line(0, PALETTE_HEIGHT, WIDTH, PALETTE_HEIGHT)
+
+    for cx, cy, radius, color in color_buttons:
         py5.fill(*color)
         py5.stroke(50)
         py5.stroke_weight(1)
-        py5.rect(x, y, size, size, 6)
+        py5.circle(cx, cy, radius * 2)
 
         if color == state.selected_color:
             py5.no_fill()
             py5.stroke(255)
             py5.stroke_weight(3)
-            py5.rect(x - 3, y - 3, size + 6, size + 6, 8)
+            py5.circle(cx, cy, radius * 2 + 8)
 
 
 def setup() -> None:
     """Inicializa la ventana, la paleta y el lienzo."""
     py5.size(WIDTH, HEIGHT)
 
-    button_size = 42
-    margin = 16
-    start_x = 20
-    y = (PALETTE_HEIGHT - button_size) // 2
+    button_radius = 20
+    margin = 24
+    start_x = 40
+    y = PALETTE_HEIGHT // 2
 
     for index, color in enumerate(PALETTE_COLORS):
-        x = start_x + index * (button_size + margin)
-        color_buttons.append((x, y, button_size, color))
+        cx = start_x + index * (button_radius * 2 + margin)
+        color_buttons.append((cx, y, button_radius, color))
 
     reset_canvas()
 
@@ -114,8 +125,8 @@ def mouse_pressed() -> None:
     if py5.mouse_y > PALETTE_HEIGHT:
         return
 
-    for x, y, size, color in color_buttons:
-        if x <= py5.mouse_x <= x + size and y <= py5.mouse_y <= y + size:
+    for cx, cy, radius, color in color_buttons:
+        if py5.dist(py5.mouse_x, py5.mouse_y, cx, cy) <= radius:
             state.selected_color = color
             draw_palette()
             draw_hud()
